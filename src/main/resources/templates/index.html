@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<!-- #######头部###### -->
+<head>
+  <title>首页</title>
+  <!-- 额外的css -->
+</head>
+<!-- ################ -->
+
+<body>
+<!-- 用来显示当前的页面大小标题 -->
+<section layout:fragment="content_header">
+  <h1>首页
+  </h1>
+</section>
+
+<!-- 用来显示真正的内容 -->
+<section layout:fragment="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="pad margin no-print" style="margin-top: -15px;">
+        <div class="callout callout-info" style="margin-bottom: 0!important;">
+          <h4><i class="fa fa-info"></i> 您好:</h4>
+          欢迎使用 中国金融租赁有限公司 白酒管理系统
+          <!--欢迎使用 中国金融租赁有限公司 反洗钱工作信息系统-->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- #######页脚###### -->
+<footer layout:replace="footer">
+</footer>
+<!-- ################ -->
+
+<!-- 额外的js -->
+<th:block layout:fragment="script">
+</th:block>
+</body>
+</html>
+
+
+

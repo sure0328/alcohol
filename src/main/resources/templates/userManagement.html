@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<!-- #######头部###### -->
+<head>
+    <title>首页</title>
+    <!-- 额外的css -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-select.css}">
+
+</head>
+<!-- ################ -->
+
+<body>
+<!-- 用来显示当前的页面大小标题 -->
+<section layout:fragment="content_header">
+    <h1>人员管理
+        <small>Console</small>
+    </h1>
+</section>
+
+<!-- 用来显示真正的内容 -->
+<section layout:fragment="content">
+
+    <div class="col-md-12" style="margin-left: -15px;">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs pull-right">
+                <li class="pull-left header"><i class="fa fa-th"></i>新增用户</li>
+            </ul>
+            <form th:action="@{/addUser}" method="post">
+                <div class="tab-content">
+                    <div class="tab-pane active clearfix" id="tab_1-1" style="padding-top: 10px;">
+                        <div class="form-group col-xs-3">
+                            <label>工号</label>
+                            <input type="text" id="userid" name="userid" class="form-control" placeholder="请输入 ...">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>用户名</label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="请输入 ...">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>真实姓名</label>
+                            <input type="text" id="usernamezh" name="usernamezh" class="form-control"
+                                   placeholder="请输入 ...">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>角色</label>
+                            <select id="role" name="role" class="form-control">
+                                <option value="1">用户</option>
+                                <option value="2">管理员</option>
+                                <option value="3">财务人员</option>
+                                <option value="4">市场人员</option>
+                                <option value="5">综合人员</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>电话</label>
+                            <input type="number" id="phone" name="phone" class="form-control" placeholder="请输入 ...">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>邮箱</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="请输入 ...">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>部门</label>
+                            <select id="department" name="department" class="form-control">
+                                <option value="">---请选择---</option>
+                                <option th:each="entry:${departmentMap}" th:value="${entry.key}"
+                                        th:text="${entry.value.departName}">部门
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>职位</label>
+                            <select id="title" name="title" class="form-control">
+                                <option value="">---请选择---</option>
+                                <option th:each="entry:${titleMap}" th:value="${entry.key}"
+                                        th:text="${entry.value.titleName}">职位
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-3" id="submit">
+                            <button type="submit" class="btn btn-primary">新增</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- /.tab-content -->
+        </div>
+        <!-- nav-tabs-custom -->
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">用户列表</h3>
+
+                    <div class="box-tools">
+
+                        <div class="input-group input-group-sm" style="width: 150px;float: left;margin-right: 8px;">
+                            <select id="searchDepartment" class="form-control">
+                                <option value="">--- &nbsp 按部门搜索 &nbsp ---</option>
+                                <option value="0">全部</option>
+                                <option th:each="entry:${departmentMap}" th:value="${entry.key}"
+                                        th:selected="${selectedDepartId == entry.key}"
+                                        th:text="${entry.value.departName}">部门
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="input-group input-group-sm" style="width: 150px;float: left;margin-right: 8px;">
+                            <select id="searchTitle" class="form-control">
+                                <option value="">--- &nbsp 按职级搜索 &nbsp ---</option>
+                                <option value="0">全部</option>
+                                <option th:each="entry:${titleMap}" th:value="${entry.key}"
+                                        th:selected="${selectedTitleId == entry.key}"
+                                        th:text="${entry.value.titleName}">部门
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <input id="searchText" type="text" name="table_search" class="form-control pull-right"
+                                   placeholder="用户名 or 真实姓名" th:value="${searchText}">
+
+                            <div class="input-group-btn">
+                                <button onclick="search()" type="submit" class="btn btn-default"><i
+                                        class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <div id="table_totalPage" style="display: none" th:text="${list.totalPage}"></div>
+                    <div id="table_curPage" style="display: none" th:text="${list.curPage}"></div>
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th>工号</th>
+                            <th>真实姓名</th>
+                            <th>用户名</th>
+                            <th>电话</th>
+                            <th>邮箱</th>
+                            <th>部门</th>
+                            <th>职位</th>
+                            <th>操作</th>
+                        </tr>
+                        <tr th:each="userListInfo : ${list.list}">
+                            <td th:text="${userListInfo.userId}">1</td>
+                            <td th:text="${userListInfo.userNameZh}">1</td>
+                            <td th:text="${userListInfo.userName}">Red chair</td>
+                            <td th:text="${userListInfo.phone}">$350</td>
+                            <td th:text="${userListInfo.email}">28-Jun-2013</td>
+                            <td th:text="${userListInfo.departName}">28-Jun-2013</td>
+                            <td th:text="${userListInfo.titleName}">28-Jun-2013</td>
+                            <td>
+                                <a th:onclick="'javascript:updateUserInfo('+${userListInfo.id}+');'">基本信息修改</a>&nbsp&nbsp
+                                <a th:onclick="'javascript:resetPassword('+${userListInfo.id}+');'">重置密码</a>&nbsp&nbsp
+                                <a th:onclick="'javascript:deleteUser('+${userListInfo.id}+');'">删除</a>&nbsp&nbsp
+                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal"
+                                        th:data-whatever="${userListInfo.id}">
+                                    权限管理
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="pagination"></div>
+
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+            <!-- Modal -->
+            <div class="modal modal-info fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+                <div class="modal-dialog" >
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">权限管理</h4>
+                        </div>
+                        <div class="modal-body"  style="height: 400px;">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">权限：</label>
+                                <div id="modalUserId" hidden>这个段落应该被隐藏。</div >
+
+                                    <select id="roleType" class="selectpicker bla bla bli" multiple data-live-search="true">
+                                        <option>cow</option>
+                                        <option>bull</option>
+                                        <option>ASD</option>
+                                        <option selected>Bla</option>
+                                        <option>Ble</option>
+                                        </optgroup>
+                                    </select>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" title="提交"
+                                    th:onclick="'javascript:role();'"
+                                   >
+                                提交
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- #######页脚###### -->
+<footer layout:replace="footer">
+</footer>
+<!-- ################ -->
+
+<th:block layout:fragment="script">
+    <script th:src="@{/plugins/bootpag/bootpag.js}" type="text/javascript"></script>
+    <script type="text/javascript"  th:src="@{/css/bootstrap-select.js}">
+    </script>
+    <script type="text/javascript">
+
+        $('#myModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var id = button.data('whatever') // 解析出data-whatever内容
+            var token = $("meta[name='_csrf']").attr("content");
+            $.ajax({
+                type: 'POST',
+                url: '/CiUserAuthority',
+                data: {'_csrf': token, id: id},
+                dataType: 'json',
+                success: function (jsonData) {
+                    var obj=jsonData.data;
+                    var objs = eval(obj);
+                    var str="";
+                    $('#myModalLabel').text("权限管理("+objs[0].name+")");
+                    $('#modalUserId').html(objs[0].id);
+
+//                    alert($('#modalUserId').html());
+                    for(var j = 1;j<objs.length;j++){
+                        if(objs[j].selected==1){
+                            str+="<option selected value='"+objs[j].key+"'>";
+                        }else{
+                            str+="<option value='"+objs[j].key+"'>";
+                        }
+                        str+=objs[j].value+"</option>";
+                    }
+                    str+="</optgroup>";
+                    //alert(str);
+                    $('#roleType').html(str);
+//                    $('.selectpicker').selectpicker({
+////                        'selectedText': 'cat'
+//                    });
+                    $('.selectpicker').selectpicker('refresh');
+                },
+                error: function () {
+                    alert('Error loading id=' + id);
+                }
+            });
+        })
+        function updateUserInfo(id) {
+            var url = "/updateUserInfo?id=" + id;
+            window.location = url;
+        }
+        function role() {
+            var token = $("meta[name='_csrf']").attr("content");
+            var id=$('#modalUserId').html();
+            var role=$('#roleType').val()+"";
+//            alert(role);
+            $.ajax({
+                type: 'POST',
+                url: '/CiUserAuthorityAdd',
+                data: {'_csrf': token, id: id, role : role},
+                dataType: 'json',
+                success: function (jsonData) {
+                    if(jsonData.successmsg!=null){
+                        alert( jsonData.successmsg);
+                    }
+                    else{
+                        alert( jsonData.errmsg);
+                    }
+                },
+                error: function () {
+                    alert('Error loading id=' + id);
+                }
+            });
+        }
+        function deleteUser(id) {
+            var url = "/deleteUser?id=" + id;
+            window.location = url;
+        }
+
+        function resetPassword(id) {
+            var url = "/resetPassword?id=" + id;
+            window.location = url;
+        }
+
+        function search() {
+            var searchText = $("#searchText").val();
+            var departId = $("#searchDepartment").val();
+            var titleId = $("#searchTitle").val();
+            var url = "/userManagement";
+            if (searchText == null || searchText == '') {
+                return;
+            }
+            url = url + "?searchText=" + searchText;
+            if (departId != '') {
+                url = url + "&departId=" + departId;
+            }
+            if (titleId != '') {
+                url = url + "&titleId=" + titleId;
+            }
+            window.location = url;
+        }
+
+        $("#searchDepartment").bind("change", function () {
+            var searchText = $("#searchText").val();
+            var departId = $("#searchDepartment").val();
+            var titleId = $("#searchTitle").val();
+            var url = "/userManagement";
+            if ($(this).val() == '') {
+                return;
+            }
+            url = url + "?departId=" + departId;
+            if (titleId != '') {
+                url = url + "&titleId=" + titleId;
+            }
+            if (searchText != '') {
+                url = url + "&searchText=" + searchText;
+            }
+            window.location = url;
+        });
+
+        $("#searchTitle").bind("change", function () {
+            var searchText = $("#searchText").val();
+            var departId = $("#searchDepartment").val();
+            var titleId = $("#searchTitle").val();
+            var url = "/userManagement";
+            if ($(this).val() == '') {
+                return;
+            }
+            url = url + "?titleId=" + titleId;
+            if (departId != '') {
+                url = url + "&departId=" + departId;
+            }
+            if (searchText != '') {
+                url = url + "&searchText=" + searchText;
+            }
+            window.location = url;
+        });
+
+        // 用来分页
+        var table_totalPage = $('#table_totalPage').text();
+        var table_curPage = $('#table_curPage').text();
+        $('#pagination').bootpag({
+            total: table_totalPage,
+            page: table_curPage,
+            next: '下一页',
+            prev: '上一页'
+        }).on("page", function (event, num) {
+            var url = window.location.href;
+            if (url.indexOf("?") > 0) {
+                if (url.indexOf("curPage=") > 0) {
+                    url = url.replace(/curPage=(\d+)/, "curPage=" + num)
+                } else {
+                    url = url + "&curPage=" + num;
+                }
+            } else {
+                url = url + "?curPage=" + num;
+            }
+            window.location = url;
+        });
+
+    </script>
+</th:block>
+
+</body>
+</html>
+
+
+

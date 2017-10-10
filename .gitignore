@@ -1,0 +1,13 @@
+*.class
+target/
+.idea/
+java.io.tmpdir/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.iml
+.DS_Store
+**/.DS_Store
+*/.DS_Store

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<!-- #######头部###### -->
+<head>
+    <title>首页</title>
+    <!-- 额外的css -->
+</head>
+<!-- ################ -->
+
+<body>
+<!-- 用来显示当前的页面大小标题 -->
+<section layout:fragment="content_header">
+    <h1>部门管理
+    </h1>
+</section>
+
+<!-- 用来显示真正的内容 -->
+<section layout:fragment="content">
+
+    <div class="col-md-12" style="margin-left: -15px;">
+        <!-- Custom Tabs (Pulled to the right) -->
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs pull-right">
+                <li class="pull-left header"><i class="fa fa-th"></i>新增部门</li>
+            </ul>
+            <form th:action="@{/addDepartment}" method="post">
+                <div class="tab-content">
+                    <div class="tab-pane active clearfix" id="tab_1-1" style="padding-top: 10px;">
+                        <div class="form-group col-xs-3">
+                            <label>部门名称</label>
+                            <input type="text" id="departmentname" name="departmentname" class="form-control"
+                                   placeholder="请输入 ...">
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>部门级别</label>
+                            <select id="level" name="level" class="form-control">
+                                <option value="1">一级</option>
+                                <option value="2">二级</option>
+                                <option value="3">三级</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>上级部门</label>
+                            <select id="department" name="department" class="form-control">
+                                <option value="0">---请选择---</option>
+                                <option th:each="entry:${departmentMap}" th:value="${entry.key}"
+                                        th:text="${entry.value.departName}">部门
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-3">
+                            <label>分管副总</label>
+                            <select id="user" name="userId" class="form-control">
+                                <option value="">---请选择---</option>
+                                <option th:each="entry:${userMap}" th:value="${entry.key}"
+                                        th:text="${entry.value.userNameZh}">人员
+                                </option>
+                            </select>
+                        </div>
+                        <div id="submit" class="form-group col-xs-4" style="margin-top: 25px;">
+                            <button type="submit" class="btn btn-primary">添加</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- /.tab-content -->
+        </div>
+        <!-- nav-tabs-custom -->
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">部门列表</h3>
+
+                    <div class="box-tools">
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <input id="searchText" type="text" name="table_search" class="form-control pull-right"
+                                   placeholder="部门名称" th:value="${searchText}">
+
+                            <div class="input-group-btn">
+                                <button onclick="search()" type="submit" class="btn btn-default"><i
+                                        class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th width="20%">部门名称</th>
+                            <th width="10%">部门级别</th>
+                            <th width="10%">部门类别</th>
+                            <th width="20%">上级部门</th>
+                            <th width="15%">分管领导</th>
+                            <th width="10%">添加时间</th>
+                            <th width="25%">操作</th>
+                        </tr>
+                        <tr th:each="departmentListInfo : ${list}">
+                            <td th:text="${departmentListInfo.departName}">1</td>
+                            <td th:text="${departmentListInfo.level==1?'一级':(departmentListInfo.level==2 ? '二级' :'三级')}">1</td>
+                            <td th:text="${depClassMap[__${departmentListInfo.departClass}__L]}">1</td>
+                            <td th:text="${departmentListInfo.departName}">1</td>
+                            <td th:text="${departmentListInfo.leaderName}">Red chair</td>
+                            <td th:text="${#dates.format(departmentListInfo.ctime, 'yyyy-MM-dd HH:mm:SS')}">$350</td>
+                            <td>
+                                <a th:onclick="'javascript:deleteDepartment('+${departmentListInfo.id}+');'">删除</a>&nbsp&nbsp
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+</section>
+
+<!-- #######页脚###### -->
+<footer layout:replace="footer">
+</footer>
+<!-- ################ -->
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        function deleteDepartment(id) {
+            var url = "/deleteDepartment?id=" + id;
+            window.location = url;
+        }
+
+        function search() {
+            var searchText = $("#searchText").val();
+            var url = "/departmentManagement";
+            if (searchText == null || searchText == '') {
+                return;
+            }
+            url = url + "?searchText=" + searchText;
+            window.location = url;
+        }
+
+    </script>
+</th:block>
+</body>
+</html>
+
+
+

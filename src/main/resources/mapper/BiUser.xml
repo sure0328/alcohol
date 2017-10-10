@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sinolease.dao.BiUserDao">
+    <resultMap id="BaseResultMap" type="com.sinolease.model.po.BiUserPo">
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="user_id" property="userId" jdbcType="INTEGER"/>
+    <result column="phone" property="phone" jdbcType="VARCHAR"/>
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    <result column="user_name_zh" property="userNameZh" jdbcType="VARCHAR"/>
+    <result column="password" property="password" jdbcType="VARCHAR"/>
+    <result column="email" property="email" jdbcType="VARCHAR"/>
+    <result column="depart_id" property="departId" jdbcType="BIGINT"/>
+    <result column="depart_name" property="departName" jdbcType="VARCHAR"/>
+    <result column="title_id" property="titleId" jdbcType="BIGINT"/>
+    <result column="title_name" property="titleName" jdbcType="VARCHAR"/>
+    <result column="role" property="role" jdbcType="VARCHAR"/>
+    <result column="state" property="state" jdbcType="INTEGER"/>
+    <result column="cuser" property="cuser" jdbcType="INTEGER"/>
+    <result column="ctime" property="ctime" jdbcType="TIMESTAMP"/>
+    <result column="muser" property="muser" jdbcType="INTEGER"/>
+    <result column="mtime" property="mtime" jdbcType="TIMESTAMP"/>
+</resultMap>
+
+    <resultMap id="RoleResultMap" type="com.sinolease.model.po.BiUserPo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="role" property="role" jdbcType="VARCHAR"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="cuser" property="cuser" jdbcType="INTEGER"/>
+        <result column="ctime" property="ctime" jdbcType="TIMESTAMP"/>
+        <result column="muser" property="muser" jdbcType="INTEGER"/>
+        <result column="mtime" property="mtime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+      id, user_id, phone, user_name, user_name_zh, password, email, depart_id, title_id, role, state,
+      cuser, ctime, muser, mtime
+    </sql>
+
+
+    <insert id="insert" parameterType="com.sinolease.model.po.BiUserPo">
+        insert into bi_user (id, user_id, phone, user_name, user_name_zh, password, email,
+        depart_id, title_id, role, state, cuser, ctime
+        )
+        values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+        #{userNameZh,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{departId,jdbcType=BIGINT}, #{titleId,jdbcType=BIGINT},
+        #{role,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{cuser,jdbcType=INTEGER}, now()
+        )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.sinolease.model.po.BiUserPo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bi_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userNameZh != null">
+                user_name_zh,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="departId != null">
+                depart_id,
+            </if>
+            <if test="titleId != null">
+                title_id,
+            </if>
+            <if test="role != null">
+                role,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="cuser != null">
+                cuser,
+            </if>
+            <if test="ctime != null">
+                ctime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="userNameZh != null">
+                #{userNameZh,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="departId != null">
+                #{departId,jdbcType=BIGINT},
+            </if>
+            <if test="titleId != null">
+                #{titleId,jdbcType=BIGINT},
+            </if>
+            <if test="role != null">
+                #{role,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="cuser != null">
+                #{cuser,jdbcType=INTEGER},
+            </if>
+            <if test="ctime != null">
+                #{ctime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <!--<insert id="insertList" parameterType="com.sinolease.model.po.BiUserPo">
+        insert into hdic_core_new.t_entity_frame_frame (id, group_id,
+        frame_id, relation_frame_id, state, type, city_id, cuser, ctime
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=BIGINT},
+            #{item.groupId,jdbcType=VARCHAR},
+            #{item.frameId,jdbcType=BIGINT},
+            #{item.relationFrameId,jdbcType=BIGINT},
+            #{item.state,jdbcType=INTEGER},
+            #{item.type,jdbcType=INTEGER},
+            #{item.cityId,jdbcType=INTEGER},
+            #{item.cuser,jdbcType=BIGINT},
+            now()
+            )
+        </foreach>
+    </insert>
+-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from bi_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByEntity" resultMap="BaseResultMap" parameterType="com.sinolease.model.po.BiUserPo">
+        select
+        <include refid="Base_Column_List"/>
+        from bi_user
+        where 1=1
+        <if test="id != null">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="userId != null">
+            AND user_id = #{userId,jdbcType=BIGINT}
+        </if>
+        <if test="userNameZh != null">
+            AND user_name_zh = #{userNameZh,jdbcType=VARCHAR}
+        </if>
+        <if test="phone != null">
+            AND phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="userName != null">
+            AND user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+        <if test="password != null">
+            AND password = #{password,jdbcType=VARCHAR}
+        </if>
+        <if test="email != null">
+            AND email = #{email,jdbcType=VARCHAR}
+        </if>
+        <if test="departId != null">
+            AND depart_id = #{departId,jdbcType=BIGINT}
+        </if>
+        <if test="titleId != null">
+            AND title_id = #{titleId,jdbcType=BIGINT}
+        </if>
+        <if test="role != null">
+            AND role = #{role,jdbcType=VARCHAR}
+        </if>
+        <if test="state != null">
+            AND state = #{state,jdbcType=INTEGER}
+        </if>
+        <!--if test="needLimit">#{page}</if-->
+        <!--<if test="frameIdList != null and frameIdList.size() > 0">
+            AND frame_id IN
+            <foreach item="idItem" collection="frameIdList" open="(" separator="," close=")">
+                #{idItem}
+            </foreach>
+        </if>-->
+    </select>
+
+    <select id="selectByEntityVo" resultMap="BaseResultMap" parameterType="com.sinolease.model.vo.BiUserVo">
+        select
+        bi_user.id, bi_user.user_id, bi_user.phone, bi_user.user_name, bi_user.user_name_zh, bi_user.password,
+        bi_user.email, bi_user.depart_id, bi_user.title_id, bi_user.role, bi_user.state,depart_Name,title_Name,
+        bi_user.cuser, bi_user.ctime, bi_user.muser, bi_user.mtime
+        from bi_user,bi_department,bi_title
+        where 1=1
+        AND bi_user.title_id=bi_title.title_id
+        AND bi_user.depart_id=bi_department.depart_id
+        <if test="departId != null and departId != 0">
+            AND bi_user.depart_id = #{departId,jdbcType=BIGINT}
+        </if>
+        <if test="titleId != null and titleId != 0">
+            AND bi_user.title_id = #{titleId,jdbcType=BIGINT}
+        </if>
+        <if test="searchText != null">
+            AND (user_name like CONCAT('%',#{searchText,jdbcType=VARCHAR},'%') OR user_name_zh like
+            CONCAT('%',#{searchText,jdbcType=VARCHAR},'%'))
+        </if>
+        order BY user_id
+        <if test="needLimit">${page}</if>
+    </select>
+
+    <select id="countByEntity" resultType="java.lang.Long" parameterType="com.sinolease.model.vo.BiUserVo">
+        select
+        count(bi_user.user_id)
+        from bi_user,bi_department,bi_title
+        where 1=1
+        AND bi_user.title_id=bi_title.title_id
+        AND bi_user.depart_id=bi_department.depart_id
+        <if test="departId != null and departId != 0">
+            AND bi_user.depart_id = #{departId,jdbcType=BIGINT}
+        </if>
+        <if test="titleId != null and titleId != 0">
+            AND bi_user.title_id = #{titleId,jdbcType=BIGINT}
+        </if>
+        <if test="searchText != null">
+            AND (user_name like CONCAT('%',#{searchText,jdbcType=VARCHAR},'%') OR user_name_zh like
+            CONCAT('%',#{searchText,jdbcType=VARCHAR},'%'))
+        </if>
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bi_user
+        where 1=1
+        AND user_id=#{userId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByUserName" resultMap="BaseResultMap" parameterType="String">
+        select
+        <include refid="Base_Column_List"/>
+        from bi_user
+        where 1=1
+        AND user_name=#{userName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByTitles" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+        a.id, a.user_id, a.phone, a.user_name, a.user_name_zh, a.password, a.email, a.depart_id,b.depart_name, a.title_id,c.title_name, a.role, a.state,
+        a.cuser, a.ctime, a.muser, a.mtime
+        from bi_user a,bi_department b,bi_title c
+        where a.depart_id=b.depart_id AND a.title_id=c.title_id
+        AND a.title_id IN
+        <foreach item="userList" index="index" collection="list" open="(" separator="," close=")">
+            #{userList}
+        </foreach>
+    </select>
+
+    <update id="updateByPrimaryKey" parameterType="com.sinolease.model.po.BiUserPo">
+        update bi_user
+        set user_id = #{userId,jdbcType=INTEGER},
+        phone = #{phone,jdbcType=VARCHAR},
+        user_name  = #{userName,jdbcType=VARCHAR},
+        user_name_zh  = #{userNameZh,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        depart_id = #{departId,jdbcType=BIGINT},
+        title_id = #{titleId,jdbcType=BIGINT},
+        role = #{role,jdbcType=VARCHAR},
+        state = #{state,jdbcType=INTEGER},
+        muser = #{muser,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sinolease.model.po.BiUserPo">
+        update bi_user
+        <set>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userNameZh != null">
+                #{userNameZh,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="departId != null">
+                #{departId,jdbcType=BIGINT},
+            </if>
+            <if test="titleId != null">
+                #{titleId,jdbcType=BIGINT},
+            </if>
+            <if test="role != null">
+                #{role,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="muser != null">
+                muser = #{muser,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!--<<update id="updateListByIds" parameterType="com.sinolease.model.po.BiUserPo">
+        update hdic_core_new.t_entity_frame_frame
+        <set>
+            <if test="groupId != null">
+                group_id = #{groupId,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId,jdbcType=INTEGER},
+            </if>
+            <if test="muser != null">
+                muser = #{muser,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id in
+        <foreach item="item" collection="frameIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>-->
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from bi_user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+    <select id="selectRoleByUserId" resultMap="RoleResultMap" parameterType="java.lang.Integer">
+    select
+    user_id,role,state,cuser,ctime,muser,mtime
+    from bi_user_role
+    where user_id = #{id,jdbcType=INTEGER}
+</select>
+    <insert id="insertRole" parameterType="com.sinolease.model.po.BiUserPo">
+        insert into bi_user_role (user_id,role, state, cuser, ctime
+        )
+        values ( #{userId,jdbcType=INTEGER},#{role,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{cuser,jdbcType=INTEGER}, now()
+        )
+    </insert>
+    <select id="selectByEntityRole" resultMap="BaseResultMap" parameterType="com.sinolease.model.vo.BiUserVo">
+        select
+        user_id, role
+        from bi_user_role
+        where 1=1
+        <if test="userId != null ">
+            AND user_id = #{userId,jdbcType=BIGINT}
+        </if>
+        <if test="role != null ">
+            AND role = #{role,jdbcType=VARCHAR}
+        </if>
+        order BY user_id
+    </select>
+
+    <delete id="deleteRole" parameterType="java.lang.Integer">
+        delete from bi_user_role
+        where user_id = #{user_id,jdbcType=INTEGER}
+    </delete>
+
+</mapper>
