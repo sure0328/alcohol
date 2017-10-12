@@ -67,7 +67,7 @@ desired effect
         <!-- Logo -->
         <a href="/index" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>PERF</b></span>
+            <span class="logo-mini"><b>ALCO</b></span>
             <!--<span class="logo-mini"><b>AML</b></span>-->
             <!-- logo for regular state and mobile devices -->
             <span class="logo-lg"><b>白酒管理系统</b></span>
@@ -127,7 +127,18 @@ desired effect
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
                 <li class="header">菜单</li>
+                <li class="treeview" sec:authorize="hasAuthority('ADMIN')">
+                    <a href="#">
+                        <i class="fa fa-files-o"></i> <span>酒罐管理</span>
+                        <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                    </a>
+                    <ul class="treeview-menu " style="display: block;">
+                        <li><a th:href="@{/wineJarManagement}"><i class="fa fa-circle-o"></i>酒罐管理</a></li>
 
+                    </ul>
+                </li>
 
                 <li class="treeview" sec:authorize="hasAuthority('ADMIN')">
                     <a href="#">

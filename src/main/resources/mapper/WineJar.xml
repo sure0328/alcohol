@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sinolease.dao.WineJarDao">
+    <resultMap id="BaseResultMap" type="com.sinolease.model.po.AlWineJarPo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="wine_id" property="wineId" jdbcType="INTEGER"/>
+        <result column="max_capacity" property="maxCapacity" jdbcType="DOUBLE"/>
+        <result column="cur_capacity" property="curCapacity" jdbcType="DOUBLE"/>
+        <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP"/>
+
+        <result column="cuser" property="cuser" jdbcType="INTEGER"/>
+        <result column="ctime" property="ctime" jdbcType="TIMESTAMP"/>
+        <result column="muser" property="muser" jdbcType="INTEGER"/>
+        <result column="mtime" property="mtime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id, wine_id, max_capacity,cur_capacity,creat_time,
+      cuser, ctime, muser, mtime
+    </sql>
+
+    <!--<insert id="insert" parameterType="com.sinolease.model.po.BiTitlePo">-->
+        <!--insert into bi_title (id, title_id, title_name,state,-->
+        <!--cuser, ctime-->
+        <!--)-->
+        <!--values (#{id,jdbcType=BIGINT}, #{titleId,jdbcType=BIGINT}, #{titleName,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER},-->
+        <!--#{cuser,jdbcType=INTEGER}, now()-->
+        <!--)-->
+    <!--</insert>-->
+
+    <!--<insert id="insertSelective" parameterType="com.sinolease.model.po.BiTitlePo" useGeneratedKeys="true" keyProperty="id">-->
+        <!--insert into bi_title-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="id != null">-->
+                <!--id,-->
+            <!--</if>-->
+            <!--<if test="titleId != null">-->
+                <!--title_id,-->
+            <!--</if>-->
+            <!--<if test="titleName != null">-->
+                <!--title_name,-->
+            <!--</if>-->
+            <!--<if test="state != null">-->
+                <!--state,-->
+            <!--</if>-->
+            <!--<if test="cuser != null">-->
+                <!--cuser,-->
+            <!--</if>-->
+            <!--<if test="ctime != null">-->
+                <!--ctime,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="id != null">-->
+                <!--#{id,jdbcType=BIGINT},-->
+            <!--</if>-->
+            <!--<if test="titleId != null">-->
+                <!--#{titleId,jdbcType=BIGINT},-->
+            <!--</if>-->
+            <!--<if test="titleName != null">-->
+                <!--#{titleName,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="state != null">-->
+               <!--#{state,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="cuser != null">-->
+                <!--#{cuser,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="ctime != null">-->
+                <!--#{ctime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+
+    <select id="getCount" resultType="INTEGER">
+        select count(*)
+        from al_wine_jar
+    </select>
+
+    <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from bi_title-->
+        <!--where id = #{id,jdbcType=BIGINT}-->
+    <!--</select>-->
+
+    <!--<select id="selectByEntity" resultMap="BaseResultMap" parameterType="com.sinolease.model.po.BiTitlePo">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from bi_title-->
+        <!--where 1=1-->
+        <!--<if test="id != null and id !=0">-->
+            <!--AND id = #{id,jdbcType=BIGINT}-->
+        <!--</if>-->
+        <!--<if test="titleId != null and titleId!=0">-->
+            <!--AND title_id = #{titleId,jdbcType=BIGINT}-->
+        <!--</if>-->
+        <!--<if test="titleName != null">-->
+            <!--AND title_Name = #{titleName,jdbcType=VARCHAR}-->
+        <!--</if>-->
+        <!--<if test="state != null">-->
+            <!--AND state = #{state,jdbcType=INTEGER}-->
+        <!--</if>-->
+        <!--&lt;!&ndash;if test="needLimit">#{page}</if&ndash;&gt;-->
+        <!--&lt;!&ndash;<if test="frameIdList != null and frameIdList.size() > 0">-->
+            <!--AND frame_id IN-->
+            <!--<foreach item="idItem" collection="frameIdList" open="(" separator="," close=")">-->
+                <!--#{idItem}-->
+            <!--</foreach>-->
+        <!--</if>&ndash;&gt;-->
+    <!--</select>-->
+
+    <select id="selectByEntityVo" resultMap="BaseResultMap" parameterType="com.sinolease.model.vo.AlWineJarVo">
+        select
+        <include refid="Base_Column_List"/>
+        from al_wine_jar
+        where 1=1
+        <if test="searchText != null">
+            AND (title_name like CONCAT('%',#{searchText,jdbcType=VARCHAR},'%'))
+        </if>
+        ORDER BY id
+        <!--<if test="needLimit">#{page}</if>-->
+        <!--<if test="frameIdList != null and frameIdList.size() > 0">
+            AND frame_id IN
+            <foreach item="idItem" collection="frameIdList" open="(" separator="," close=")">
+                #{idItem}
+            </foreach>
+        </if>-->
+    </select>
+
+
+    <!--<update id="updateByPrimaryKeySelective" parameterType="com.sinolease.model.po.BiTitlePo">-->
+        <!--update bi_title-->
+        <!--<set>-->
+            <!--<if test="titleId != null">-->
+                <!--#{titleId,jdbcType=BIGINT},-->
+            <!--</if>-->
+            <!--<if test="titleName != null">-->
+                <!--#{titleName,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="state != null">-->
+                <!--state = #{state,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="muser != null">-->
+                <!--muser = #{muser,jdbcType=INTEGER},-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--where id = #{id,jdbcType=BIGINT}-->
+    <!--</update>-->
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from al_wine_jar
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+</mapper>
